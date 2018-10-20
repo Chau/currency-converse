@@ -120,4 +120,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-OPENEXCHANGERATES_ID = '0e75fbdd69c44be6ab47507e191df963'
+RATES_FNAME = os.path.join(BASE_DIR, 'rates_data', 'last_rates.json')

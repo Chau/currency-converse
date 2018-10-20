@@ -1,5 +1,4 @@
 
-
 // using jQuery
 function getCookie(name) {
     var cookieValue = null;
@@ -31,19 +30,37 @@ $.ajaxSetup({
     }
 });
 
+
+//--
 var setResponseToDom = function(response){
     console.log(response);
-    $('#result').html(9876);
+    if (response['status'] == 400 ){
+        var error_messages = response['error']['message'];
+        alert(error_messages.join('\n'));
+        return;
+    };
+    var converted_amount = response['converted_amount'];
+    $('#result').html(converted_amount);
 };
 
 
 var sendCurrency = function(){
-    console.log('go!');
-    data = {'from': $('#from-currency option:selected').val(),
-            'to': $('#to-currency option:selected').val(),
-            'amount': $('#amount').val()
+    var from_currency = $('#from-currency option:selected').val();
+    var to_currency = $('#to-currency option:selected').val();
+    if (from_currency == to_currency) {
+        alert('Select different currency types!');
+        return false;
     }
-    console.log(data);
+    var amount = $('#amount').val();
+
+    if (amount == '' || amount == undefined){
+        alert("Fill amount field, please!");
+        return false;
+    }
+    data = {'from_currency': from_currency,
+            'to_currency': to_currency,
+            'amount': amount
+    }
     $.post('/api/currency/converse', data, setResponseToDom);
 
 };
