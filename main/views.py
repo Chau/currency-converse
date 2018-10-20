@@ -44,6 +44,7 @@ def currency_converse(request):
                                      'code': 1,
                                      'message': errors
                                  }})
+        
         converse = ConvertRate(from_currency=from_currency, to_currency=to_currency, amount=amount)
         converted_amount = converse.convert()
         return JsonResponse({'converted_amount': converted_amount, 'currency': to_currency})
