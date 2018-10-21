@@ -3,6 +3,9 @@
 import json
 
 from django.conf import settings
+from logging import getLogger
+
+log = getLogger(__name__)
 
 
 class ConvertRate():
@@ -28,8 +31,12 @@ class ConvertRate():
         return '{:,.2f}'.format(amount).replace(',', ' ')
 
     def convert(self):
-        rates_json = self.get_last_rate_from_file()
-        rate = float(self.find_rate(rates_json))
-        return self.format_amount(self.amount * rate)
+        try:
+            rates_json = self.get_last_rate_from_file()
+            rate = float(self.find_rate(rates_json))
+            return self.format_amount(self.amount * rate)
+        except Exception as e:
+            log.error(str(e))
+            raise type(e)
 
 # end

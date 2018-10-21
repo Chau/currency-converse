@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+LOGS_DIR = os.path.join(BASE_DIR, 'log')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -100,6 +102,70 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+if not os.path.exists(LOGS_DIR):
+    os.makedirs(LOGS_DIR)
+
+# logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    # FILTERS
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue'
+        }
+
+    },
+    # HANDLERS
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+            },
+        'console': { # CONSOLE
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'filters': [],
+        },
+        'log': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOGS_DIR, 'app.log'),
+            'maxBytes': 1000000,
+            'backupCount': 8,
+            'formatter': 'simple',
+        },
+    },
+    # LOGGERS
+    'loggers': {
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'level': 'CRITICAL',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console', 'log'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        '': {
+            'handlers': ['console', 'log'],
+            'level': 'DEBUG',
+            # 'propagate': True,
+        },
+    },
+    # FORMATTERS
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s [%(name)s] %(levelname)s - %(message)s',
+            'datefmt': '',
+        }
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

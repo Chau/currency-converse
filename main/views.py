@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 
-
 from django.shortcuts import render, render_to_response
 from django.http import JsonResponse, HttpResponseNotAllowed
 
@@ -44,9 +43,17 @@ def currency_converse(request):
                                      'code': 1,
                                      'message': errors
                                  }})
-        
-        converse = ConvertRate(from_currency=from_currency, to_currency=to_currency, amount=amount)
-        converted_amount = converse.convert()
+
+            converse = ConvertRate(from_currency=from_currency, to_currency=to_currency, amount=amount)
+
+        try:
+            converted_amount = converse.convert()
+        except Exception as e:
+            return JsonResponse({'status': 500,
+                                 'error':{
+                                     'code': 2,
+                                     'message': 'Internal error'
+                                 }})
         return JsonResponse({'converted_amount': converted_amount, 'currency': to_currency})
     else:
         return HttpResponseNotAllowed(['POST',])

@@ -33,8 +33,7 @@ $.ajaxSetup({
 
 //--
 var setResponseToDom = function(response){
-    console.log(response);
-    if (response['status'] == 400 ){
+    if (response['status'] != undefined ){
         var error_messages = response['error']['message'];
         alert(error_messages.join('\n'));
         return;
