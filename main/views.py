@@ -34,7 +34,7 @@ def currency_converse(request):
 
         try:
             amount = float(request.POST.get('amount'))
-        except TypeError:
+        except ValueError:
             errors.append('Bad type of "amount" param')
 
         if errors:
@@ -44,7 +44,7 @@ def currency_converse(request):
                                      'message': errors
                                  }})
 
-            converse = ConvertRate(from_currency=from_currency, to_currency=to_currency, amount=amount)
+        converse = ConvertRate(from_currency=from_currency, to_currency=to_currency, amount=amount)
 
         try:
             converted_amount = converse.convert()
